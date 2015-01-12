@@ -1,0 +1,70 @@
+<project name="asunit-3.0.0" default="all" basedir=".">
+
+<description>
+ASUnit Testing Library
+</description>
+
+<!-- Override to avoid conflict -->
+<property name="build.root" location="out"/>
+
+<property name="support.home" location=".."/>
+<import file="${support.home}/ant/air.xml"/>
+<property file="${support.home}/build.properties"/>
+
+<property name="build.package" location="${build.root}/package"/>
+
+<!-- Source -->
+<property name="src.root" location="asunit-3.0/src"/>
+
+<!-- Global targets -->
+<target name="all" depends="package"/>
+
+<!-- Init -->
+<target name="init">
+
+    <tstamp>
+        <format property="build.time" pattern="yyyy/MM/dd hh:mm"/>
+    </tstamp>
+
+</target>
+
+<!-- Clean -->
+<target name="clean" description="Remove build files">
+    <delete dir="${build.root}"/>
+</target>
+
+<!-- Dependencies to build -->
+<target name="dependencies">
+    
+    <path id="src.path">
+        <pathelement location='${src.root}/asunit/framework/TestCase.as'/>
+        <pathelement location='${src.root}/asunit/errors/AssertionFailedError.as'/>
+        <pathelement location='${src.root}/asunit/framework/Test.as'/>
+        <pathelement location='${src.root}/asunit/framework/TestResult.as'/>
+        <pathelement location='${src.root}/asunit/textui/TestRunner.as'/>
+        <pathelement location='${src.root}/asunit/framework/TestSuite.as'/>
+        <pathelement location='${src.root}/asunit/framework/Assert.as'/>
+        <pathelement location='${src.root}/asunit/runner/TestSuiteLoader.as'/>
+    </path>
+
+</target>
+
+<target name="compile-init" depends="init,dependencies"/>
+
+<target name="package" depends="compile-init">
+
+    <echo message="Packaging swc to ${build.package}"/>
+
+    <compc
+            pathRef="src.path"
+            configxml="resources/lib.xml"
+            debug="false"
+            sdkConfig="air"
+            sdkPath="${air.sdk.home}"
+            output="${build.package}/${ant.project.name}.swc">
+        <arg value='-sp=${src.root}'/>
+    </compc>
+
+</target>
+
+</project>
